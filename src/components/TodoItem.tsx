@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import cn from 'classnames';
 
 import { Todo } from '../types/Todo';
@@ -26,6 +26,8 @@ export const TodoItem: React.FC<TodoItemProps> = React.memo(
     const [isLoading, setIsLoading] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState(title);
+
+    const editInputRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
       if (isLoad) {
@@ -122,13 +124,15 @@ export const TodoItem: React.FC<TodoItemProps> = React.memo(
 
           return newTodos;
         });
+
+        setIsEditing(false);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Unable to update a todo', error);
         setError('Unable to update a todo');
+        editInputRef.current?.focus();
       } finally {
         setIsLoading(false);
-        setIsEditing(false);
       }
     };
 
@@ -153,6 +157,7 @@ export const TodoItem: React.FC<TodoItemProps> = React.memo(
         {isEditing ? (
           <form onSubmit={handleSaveTitle}>
             <input
+              ref={editInputRef}
               data-cy="TodoTitleField"
               type="text"
               className="todo__title-field"
