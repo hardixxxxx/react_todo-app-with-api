@@ -8,6 +8,7 @@ interface TodoHeaderProps {
   setError: React.Dispatch<React.SetStateAction<string>>;
   setTempTodo: React.Dispatch<React.SetStateAction<Todo | null>>;
   setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+  todos: Todo[];
   inputTodoRef: React.MutableRefObject<HTMLInputElement | null>;
   handleStatusesChange: () => void;
   areAllTodosCompleted: boolean;
@@ -18,6 +19,7 @@ export const TodoHeader: React.FC<TodoHeaderProps> = React.memo(
     setError,
     setTempTodo,
     setTodos,
+    todos,
     inputTodoRef,
     handleStatusesChange,
     areAllTodosCompleted,
@@ -69,14 +71,16 @@ export const TodoHeader: React.FC<TodoHeaderProps> = React.memo(
     return (
       <header className="todoapp__header">
         {/* this button should have `active` class only if all todos are completed */}
-        <button
-          type="button"
-          className={cn('todoapp__toggle-all', {
-            active: areAllTodosCompleted,
-          })}
-          data-cy="ToggleAllButton"
-          onClick={handleStatusesChange}
-        />
+        {!!todos.length && (
+          <button
+            type="button"
+            className={cn('todoapp__toggle-all', {
+              active: areAllTodosCompleted,
+            })}
+            data-cy="ToggleAllButton"
+            onClick={handleStatusesChange}
+          />
+        )}
 
         {/* Add a todo on form submit */}
         <form onSubmit={handleSubmit}>

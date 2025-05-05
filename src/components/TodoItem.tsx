@@ -9,8 +9,7 @@ type TodoItemProps = {
   setTodos?: React.Dispatch<React.SetStateAction<Todo[]>>;
   setError?: React.Dispatch<React.SetStateAction<string>>;
   isLoad?: boolean;
-  todoIdsToDelete?: number[];
-  todoIdsToUpdate?: number[];
+  processingTodoIds?: number[];
   inputTodoRef?: React.MutableRefObject<HTMLInputElement | null>;
 };
 
@@ -20,8 +19,7 @@ export const TodoItem: React.FC<TodoItemProps> = React.memo(
     isLoad,
     setTodos = () => {},
     setError = () => {},
-    todoIdsToDelete,
-    todoIdsToUpdate,
+    processingTodoIds,
     inputTodoRef,
   }) => {
     const { completed, title, id } = todo;
@@ -34,16 +32,16 @@ export const TodoItem: React.FC<TodoItemProps> = React.memo(
         setIsLoading(true);
       }
 
-      const needLoad =
-        todoIdsToDelete?.some(idToDelete => idToDelete === id) ||
-        todoIdsToUpdate?.some(idToUpdate => idToUpdate === id);
+      const needLoad = processingTodoIds?.some(
+        processingId => processingId === id,
+      );
 
       if (needLoad) {
         setIsLoading(true);
       }
 
       return () => setIsLoading(false);
-    }, [isLoad, todoIdsToDelete, todoIdsToUpdate, id]);
+    }, [isLoad, processingTodoIds, id]);
 
     useEffect(() => {
       const handleEsc = (event: KeyboardEvent) => {
@@ -147,8 +145,8 @@ export const TodoItem: React.FC<TodoItemProps> = React.memo(
             data-cy="TodoStatus"
             type="checkbox"
             className="todo__status"
-            defaultChecked={completed}
-            onClick={handleTodoStatus}
+            checked={completed}
+            onChange={handleTodoStatus}
           />
         </label>
 

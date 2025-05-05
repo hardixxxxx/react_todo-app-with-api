@@ -8,8 +8,7 @@ type TodoListProps = {
   tempTodo: Todo | null;
   setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
   setError: React.Dispatch<React.SetStateAction<string>>;
-  todoIdsToDelete: number[];
-  todoIdsToUpdate: number[];
+  processingTodoIds: number[];
   inputTodoRef: React.MutableRefObject<HTMLInputElement | null>;
 };
 
@@ -19,8 +18,7 @@ export const TodoList: React.FC<TodoListProps> = React.memo(
     tempTodo,
     setTodos,
     setError,
-    todoIdsToDelete,
-    todoIdsToUpdate,
+    processingTodoIds,
     inputTodoRef,
   }) => {
     return (
@@ -33,8 +31,7 @@ export const TodoList: React.FC<TodoListProps> = React.memo(
                 todo={todo}
                 setTodos={setTodos}
                 setError={setError}
-                todoIdsToDelete={todoIdsToDelete}
-                todoIdsToUpdate={todoIdsToUpdate}
+                processingTodoIds={processingTodoIds}
                 inputTodoRef={inputTodoRef}
               />
             </CSSTransition>

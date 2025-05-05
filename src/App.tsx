@@ -15,8 +15,7 @@ export const App: React.FC = () => {
   const [error, setError] = useState('');
   const [filterBy, setFilterBy] = useState<Filter>('All');
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
-  const [todoIdsToDelete, setTodoIdsToDelete] = useState<number[]>([]);
-  const [todoIdsToUpdate, setTodoIdsToUpdate] = useState<number[]>([]);
+  const [processingTodoIds, setProcessingTodoIds] = useState<number[]>([]);
 
   const inputTodoRef = useRef<HTMLInputElement | null>(null);
 
@@ -89,7 +88,7 @@ export const App: React.FC = () => {
     }
 
     try {
-      setTodoIdsToDelete(completedTodosIds);
+      setProcessingTodoIds(completedTodosIds);
 
       const results = await Promise.allSettled(
         completedTodosIds.map(id =>
@@ -111,7 +110,7 @@ export const App: React.FC = () => {
         setError('Unknown error');
       }
     } finally {
-      setTodoIdsToDelete([]);
+      setProcessingTodoIds([]);
       inputTodoRef.current?.focus();
     }
   };
@@ -130,7 +129,7 @@ export const App: React.FC = () => {
     }
 
     try {
-      setTodoIdsToUpdate(todosIdxToChange);
+      setProcessingTodoIds(todosIdxToChange);
 
       const results = await Promise.allSettled(
         todosIdxToChange.map(id => updateTodo(id, changeableValue)),
@@ -164,7 +163,7 @@ export const App: React.FC = () => {
         setError('Unknown error occurred');
       }
     } finally {
-      setTodoIdsToUpdate([]);
+      setProcessingTodoIds([]);
     }
   };
 
@@ -176,6 +175,7 @@ export const App: React.FC = () => {
         <TodoHeader
           setError={setError}
           setTempTodo={setTempTodo}
+          todos={todos}
           setTodos={setTodos}
           inputTodoRef={inputTodoRef}
           handleStatusesChange={handleStatusesChange}
@@ -188,8 +188,7 @@ export const App: React.FC = () => {
             tempTodo={tempTodo}
             setTodos={setTodos}
             setError={setError}
-            todoIdsToDelete={todoIdsToDelete}
-            todoIdsToUpdate={todoIdsToUpdate}
+            processingTodoIds={processingTodoIds}
             inputTodoRef={inputTodoRef}
           />
         )}
